@@ -23,28 +23,44 @@ function App() {
   const [merchantPolicy, setMerchantPolicy] = useState(null);
   const [policyLoading, setPolicyLoading] = useState(false);
   const [policyStatus, setPolicyStatus] = useState("");
-    async function loadMerchantInsights() {
-    setInsightsLoading(true);
+  const [policyEditorOpen, setPolicyEditorOpen] = useState(false);
+  const [policyDraftDiscount, setPolicyDraftDiscount] = useState(299);
+  const [policyDraftEnabled, setPolicyDraftEnabled] = useState(true);
+  const [recommendations, setRecommendations] = useState(null);
+  const [recommendationsLoading, setRecommendationsLoading] = useState(false);
+  const [selectedBundle, setSelectedBundle] = useState(null);
+  async function loadMerchantInsights() {
+  setInsightsLoading(true);
+  setError("");
 
-    try {
-      const response = await fetch(
-        `${API_BASE}/api/merchant/insights`
+  try {
+    const [insightsResponse, policyResponse] = await Promise.all([
+      fetch(`${API_BASE}/api/merchant/insights`),
+      fetch(`${API_BASE}/api/merchant/policy`),
+    ]);
+
+    const insightsData = await insightsResponse.json();
+    const policyData = await policyResponse.json();
+
+    if (!insightsResponse.ok) {
+      throw new Error(
+        insightsData.detail || "Unable to load merchant insights."
       );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.detail || "Unable to load merchant insights."
-        );
-      }
-
-      setInsights(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setInsightsLoading(false);
     }
+
+    if (!policyResponse.ok) {
+      throw new Error(
+        policyData.detail || "Unable to load merchant policy."
+      );
+    }
+
+    setInsights(insightsData);
+    setMerchantPolicy(policyData);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setInsightsLoading(false);
+  }
   }
 
     async function refreshAudit(transactionId) {
@@ -99,7 +115,8 @@ function App() {
       setNegotiationResult(null);
       setNegotiationOffer("");
     setResult(null);
-
+    setRecommendations(null);
+    setSelectedBundle(null);
     try {
       const response = await fetch(
         `${API_BASE}/api/agent/purchase`,
@@ -126,6 +143,17 @@ function App() {
       }
 
       setResult(data);
+
+      if (
+        data.product?.selected_product_id &&
+        data.authorization?.buyer_max_amount
+      ) {
+        await loadRecommendations(
+          data.product.selected_product_id,
+          data.authorization.buyer_max_amount
+        );
+      }
+
       await loadMerchantInsights();
       if (data.status === "blocked") {
         setPaymentStatus("AI purchase blocked by policy.");
@@ -135,6 +163,41 @@ function App() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function loadRecommendations(productId, buyerMaxBudget) {
+  setRecommendationsLoading(true);
+  setRecommendations(null);
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/api/recommendations/add-ons`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          product_id: productId,
+          buyer_max_budget: Number(buyerMaxBudget),
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.detail || "Unable to load recommendations."
+      );
+    }
+
+    setRecommendations(data);
+  } catch (err) {
+    console.error("Recommendation load failed:", err);
+  } finally {
+    setRecommendationsLoading(false);
+  }
   }
 
   async function loadRazorpayScript() {
@@ -299,8 +362,8 @@ function App() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              ai_negotiation_enabled: true,
-              max_ai_discount: 299,
+              ai_negotiation_enabled: policyDraftEnabled,
+              max_ai_discount: Number(policyDraftDiscount),
             }),
           }
         );
@@ -316,8 +379,11 @@ function App() {
 
         setMerchantPolicy(data.policy);
         setPolicyStatus(
-          "AI negotiation approved. Maximum discount is now ₹299."
+          `Policy saved. AI negotiation ${
+            data.policy.ai_negotiation_enabled ? "enabled" : "disabled"
+          }, maximum discount ₹${data.policy.max_ai_discount.toLocaleString("en-IN")}.`
         );
+setPolicyEditorOpen(false);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -411,6 +477,105 @@ function App() {
         setNegotiationLoading(false);
       }
     }
+
+    async function createBundleOrder(bundle) {
+  if (!result?.transaction_id || !bundle?.add_on?.id) {
+    return;
+  }
+
+  setPaymentLoading(true);
+  setError("");
+  setPaymentStatus("");
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/api/payment/create-bundle-order`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          transaction_id: result.transaction_id,
+          add_on_product_id: bundle.add_on.id,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.detail?.message ||
+          data.detail ||
+          "Unable to create bundle Razorpay order."
+      );
+    }
+
+    const bundleContext = {
+      ...bundle,
+      original_price: data.bundle.original_price,
+      final_price: data.bundle.final_price,
+      discount: data.bundle.discount,
+    };
+
+    setSelectedBundle(bundleContext);
+
+    setResult((current) => ({
+      ...current,
+      payment: {
+        provider: "razorpay",
+        order_id: data.razorpay_order.id,
+        amount: data.razorpay_order.amount,
+        currency: data.razorpay_order.currency,
+      },
+      authorization: {
+        authorized: true,
+        buyer_max_amount: data.bundle.buyer_max_amount,
+        approved_amount: data.bundle.final_price,
+        currency: data.razorpay_order.currency,
+        product_id: data.bundle.base_product.id,
+        merchant_id: "merchant_demo",
+        transaction_id: data.transaction_id,
+        reason: "Bundle approved within buyer and merchant authority.",
+      },
+      audit: current?.audit || [],
+    }));
+
+    setPaymentStatus(
+      `Bundle authorized: ${data.bundle.base_product.name} + ${data.bundle.add_on.name} · ₹${data.bundle.final_price.toLocaleString(
+        "en-IN"
+      )}`
+    );
+
+    await refreshAudit(data.transaction_id);
+
+    // Re-apply the bundle payment state after the audit refresh.
+    setResult((current) => ({
+      ...current,
+      payment: {
+        provider: "razorpay",
+        order_id: data.razorpay_order.id,
+        amount: data.razorpay_order.amount,
+        currency: data.razorpay_order.currency,
+      },
+      authorization: {
+        authorized: true,
+        buyer_max_amount: data.bundle.buyer_max_amount,
+        approved_amount: data.bundle.final_price,
+        currency: data.razorpay_order.currency,
+        product_id: data.bundle.base_product.id,
+        merchant_id: "merchant_demo",
+        transaction_id: data.transaction_id,
+        reason: "Bundle approved within buyer and merchant authority.",
+      },
+    }));
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setPaymentLoading(false);
+  }
+  }
 
     async function createPayment() {
     if (
@@ -806,7 +971,135 @@ async function recoverPayment() {
               )}
             </div>
           )}
+                    {recommendationsLoading && (
+            <div className="recommendation-card">
+              <div className="section-title">
+                <span>05</span>
+                AI Recommendations
+              </div>
 
+              <p>Analyzing compatible products within buyer authority...</p>
+            </div>
+          )}
+
+          {!recommendationsLoading &&
+            recommendations?.bundle_opportunities?.length > 0 && (
+              <div className="recommendation-card bundle-opportunity">
+                <div className="section-title">
+                  <span>05</span>
+                  AI Bundle Opportunity
+                </div>
+
+                {(() => {
+                  const bundle =
+                    recommendations.bundle_opportunities[0];
+
+                  return (
+                    <>
+                      <div className="bundle-header">
+                        <div>
+                          <small>RECOMMENDED BUNDLE</small>
+                          <h3>
+                            {bundle.base_product.name} +{" "}
+                            {bundle.add_on.name}
+                          </h3>
+                        </div>
+
+                        <span className="bundle-badge">
+                          {bundle.negotiation_available
+                            ? "NEGOTIABLE"
+                            : "OVER AUTHORITY"}
+                        </span>
+                      </div>
+
+                      <div className="bundle-metrics">
+                        <div>
+                          <small>CURRENT TOTAL</small>
+                          <strong>
+                            ₹
+                            {bundle.combined_price.toLocaleString(
+                              "en-IN"
+                            )}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <small>YOUR AUTHORITY</small>
+                          <strong>
+                            ₹
+                            {bundle.buyer_max_budget.toLocaleString(
+                              "en-IN"
+                            )}
+                          </strong>
+                        </div>
+
+                        <div>
+                          <small>PRICE GAP</small>
+                          <strong>
+                            ₹{bundle.price_gap.toLocaleString("en-IN")}
+                          </strong>
+                        </div>
+                      </div>
+
+                      <p className="bundle-reason">
+                        {bundle.negotiation_available
+                          ? `The bundle is ₹${bundle.price_gap.toLocaleString(
+                              "en-IN"
+                            )} above your authority, but the merchant's bounded AI negotiation policy can cover the gap.`
+                          : bundle.reason}
+                      </p>
+
+                      {bundle.negotiation_available &&
+                      (selectedBundle ? (
+                        <div className="bundle-selected">
+                          ✓ Bundle selected
+                          <span>
+                            Target price: ₹
+                            {selectedBundle.buyer_max_budget.toLocaleString("en-IN")}
+                          </span>
+                        </div>
+                      ) : (
+                        <button
+                          className="recommendation-button"
+                          onClick={() => createBundleOrder(bundle)}
+                          disabled={paymentLoading}
+                        >
+                          {paymentLoading
+                            ? "Building Bundle..."
+                            : "Build This Bundle"}
+                        </button>
+                      ))}
+                      )
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+
+          {!recommendationsLoading &&
+            recommendations?.recommendations?.length > 0 && (
+              <div className="recommendation-card">
+                <div className="section-title">
+                  <span>05</span>
+                  AI Add-ons
+                </div>
+
+                {recommendations.recommendations.map((item) => (
+                  <div className="addon-row" key={item.id}>
+                    <div>
+                      <strong>{item.name}</strong>
+                      <small>
+                        {item.reason}
+                      </small>
+                    </div>
+
+                    <strong>
+                      ₹{item.price.toLocaleString("en-IN")}
+                    </strong>
+                  </div>
+                ))}
+              </div>
+            )}
           <div className="checks">
             <div className="section-title">
               <span>04</span>
@@ -836,17 +1129,82 @@ async function recoverPayment() {
               </div>
 
               <div className="payment-summary">
-                <small>AUTHORIZED RAZORPAY ORDER</small>
-                <strong>
-                  ₹
-                  {result.authorization.approved_amount.toLocaleString(
-                    "en-IN"
-                  )}
-                </strong>
-                <span>
-                  Order {result.payment.order_id}
-                </span>
-              </div>
+  <small>
+    {selectedBundle
+      ? "AI BUNDLE AUTHORIZED"
+      : "AUTHORIZED RAZORPAY ORDER"}
+  </small>
+
+  {selectedBundle ? (
+    <>
+      <div className="bundle-payment-items">
+        <div>
+          <span>{selectedBundle.base_product.name}</span>
+          <strong>
+            ₹
+            {selectedBundle.base_product.price.toLocaleString(
+              "en-IN"
+            )}
+          </strong>
+        </div>
+
+        <div>
+          <span>{selectedBundle.add_on.name}</span>
+          <strong>
+            ₹
+            {selectedBundle.add_on.price.toLocaleString(
+              "en-IN"
+            )}
+          </strong>
+        </div>
+
+        <div className="bundle-payment-total">
+          <span>Bundle price</span>
+          <strong>
+            ₹
+            {(
+              selectedBundle.base_product.price +
+              selectedBundle.add_on.price
+            ).toLocaleString("en-IN")}
+          </strong>
+        </div>
+
+        <div>
+          <span>AI negotiation discount</span>
+          <strong>
+            −₹
+            {(
+              selectedBundle.base_product.price +
+              selectedBundle.add_on.price -
+              result.authorization.approved_amount
+            ).toLocaleString("en-IN")}
+          </strong>
+        </div>
+      </div>
+
+      <div className="bundle-payment-final">
+        <span>YOU PAY</span>
+        <strong>
+          ₹
+          {result.authorization.approved_amount.toLocaleString(
+            "en-IN"
+          )}
+        </strong>
+            </div>
+          </>
+        ) : (
+          <strong>
+            ₹
+            {result.authorization.approved_amount.toLocaleString(
+              "en-IN"
+            )}
+          </strong>
+        )}
+
+        <span>
+          Order {result.payment.order_id}
+        </span>
+      </div>
 
               {transactionState?.status !== "PAYMENT_FAILED" ||
               transactionState?.retry_count < 1 ? (
@@ -1152,38 +1510,97 @@ async function recoverPayment() {
           </div>
         </div>
 
-        <div className="merchant-section">
-          <div className="section-title">
-            <span>03</span>
-            AI Commerce Policy
-          </div>
-
-          <div className="policy-grid">
-            <div className="policy-card">
-              <small>AGENT PURCHASES</small>
-              <strong>ENABLED</strong>
-              <p>AI buyers may purchase approved products.</p>
-            </div>
-
-            <div className="policy-card">
-              <small>AI NEGOTIATION</small>
-              <strong>READY</strong>
-              <p>Offer engine will respect merchant price limits.</p>
-            </div>
-
-            <div className="policy-card">
-              <small>MAX RETRIES</small>
-              <strong>1</strong>
-              <p>Payment recovery is strictly bounded.</p>
-            </div>
-
-            <div className="policy-card">
-              <small>HUMAN APPROVAL</small>
-              <strong>ABOVE LIMIT</strong>
-              <p>Actions outside policy require merchant review.</p>
-            </div>
-          </div>
+        <div className="policy-card policy-card-editable">
+  {!policyEditorOpen ? (
+    <>
+      <div className="policy-card-header">
+        <div>
+          <small>AI NEGOTIATION</small>
+          <strong
+            className={
+              merchantPolicy?.ai_negotiation_enabled
+                ? "allowed"
+                : "blocked"
+            }
+          >
+            {merchantPolicy?.ai_negotiation_enabled
+              ? "ENABLED"
+              : "DISABLED"}
+          </strong>
         </div>
+
+        <button
+          className="policy-edit-button"
+          onClick={() => {
+            setPolicyDraftEnabled(
+              Boolean(merchantPolicy?.ai_negotiation_enabled)
+            );
+            setPolicyDraftDiscount(
+              merchantPolicy?.max_ai_discount ?? 299
+            );
+            setPolicyEditorOpen(true);
+          }}
+        >
+          Edit Policy
+        </button>
+      </div>
+
+      <p>
+        Maximum AI discount: ₹
+        {merchantPolicy?.max_ai_discount?.toLocaleString("en-IN") ?? "—"}
+      </p>
+    </>
+  ) : (
+    <>
+      <small>AI NEGOTIATION POLICY</small>
+
+      <label className="policy-field">
+        <span>Enable negotiation</span>
+        <select
+          value={policyDraftEnabled ? "enabled" : "disabled"}
+          onChange={(e) =>
+            setPolicyDraftEnabled(e.target.value === "enabled")
+          }
+        >
+          <option value="enabled">Enabled</option>
+          <option value="disabled">Disabled</option>
+        </select>
+      </label>
+
+      <label className="policy-field">
+        <span>Maximum AI discount (₹)</span>
+        <input
+          type="number"
+          min="0"
+          value={policyDraftDiscount}
+          onChange={(e) => setPolicyDraftDiscount(e.target.value)}
+        />
+      </label>
+
+      <div className="policy-edit-actions">
+        <button
+          className="merchant-action"
+          onClick={approveNegotiationOpportunity}
+          disabled={
+            policyLoading ||
+            policyDraftDiscount === "" ||
+            Number(policyDraftDiscount) < 0
+          }
+        >
+          {policyLoading ? "Saving Policy..." : "Save Policy"}
+        </button>
+
+        <button
+          className="policy-cancel-button"
+          onClick={() => setPolicyEditorOpen(false)}
+          disabled={policyLoading}
+        >
+          Cancel
+        </button>
+      </div>
+    </>
+  )}
+</div>
 
         <div className="merchant-section">
           <div className="section-title">
@@ -1250,8 +1667,10 @@ async function recoverPayment() {
                   disabled={policyLoading}
                 >
                   {policyLoading
-                    ? "Updating Policy..."
-                    : "Approve AI Negotiation"}
+  ? "Updating Policy..."
+  : merchantPolicy?.ai_negotiation_enabled
+    ? "✓ Enabled · Update Policy"
+    : "Enable AI Negotiation"}
                 </button>
 
                 {policyStatus && (

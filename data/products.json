@@ -1,0 +1,47 @@
+[
+  {
+    "id": "prod_001",
+    "name": "Mechanical Keyboard",
+    "description": "Compact mechanical keyboard suitable for programming and everyday work.",
+    "category": "peripherals",
+    "price": 2499,
+    "currency": "INR",
+    "stock": 42
+  },
+  {
+    "id": "prod_002",
+    "name": "Wireless Mouse",
+    "description": "Ergonomic wireless mouse for productivity and everyday use.",
+    "category": "peripherals",
+    "price": 1299,
+    "currency": "INR",
+    "stock": 68
+  },
+  {
+    "id": "prod_003",
+    "name": "USB-C Hub",
+    "description": "Multi-port USB-C hub for laptops and workstations.",
+    "category": "accessories",
+    "price": 1799,
+    "currency": "INR",
+    "stock": 35
+  },
+  {
+    "id": "prod_004",
+    "name": "Laptop Stand",
+    "description": "Adjustable laptop stand for a more comfortable workstation.",
+    "category": "accessories",
+    "price": 1499,
+    "currency": "INR",
+    "stock": 51
+  },
+  {
+    "id": "prod_005",
+    "name": "Webcam",
+    "description": "Full HD webcam for meetings, streaming and remote work.",
+    "category": "peripherals",
+    "price": 2999,
+    "currency": "INR",
+    "stock": 24
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "ai_negotiation_enabled": true,
+  "max_ai_discount": 299,
+  "require_human_approval_above": 299
+}
