@@ -109,11 +109,24 @@ function App() {
     }
   }
     async function evaluatePurchase() {
-    setLoading(true);
     setError("");
+
+    const normalizedBudget = Number(budget);
+
+    if (
+      budget === "" ||
+      !Number.isFinite(normalizedBudget) ||
+      normalizedBudget <= 0
+    ) {
+      setError("Please enter your budget.");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     setPaymentStatus("");
-      setNegotiationResult(null);
-      setNegotiationOffer("");
+    setNegotiationResult(null);
+    setNegotiationOffer("");
     setResult(null);
     setRecommendations(null);
     setSelectedBundle(null);
@@ -135,11 +148,16 @@ function App() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.detail?.message ||
-            data.detail ||
-            "Agent purchase failed"
-        );
+        const detail =
+          typeof data.detail === "string"
+            ? data.detail
+            : Array.isArray(data.detail)
+              ? data.detail
+                  .map((item) => item.msg || "Invalid request.")
+                  .join(" ")
+              : data.detail?.message || "Agent purchase failed";
+
+        throw new Error(detail);
       }
 
       setResult(data);
@@ -799,7 +817,25 @@ async function recoverPayment() {
                 <strong>{event.event_type.replaceAll("_", " ")}</strong>
                 <p>
                   {event.details
-                    ? JSON.stringify(event.details)
+                    ? (() => {
+                        const displayDetails = { ...event.details };
+                        const razorpayAmountEvents = new Set([
+                          "ORDER_CREATED",
+                          "NEGOTIATED_ORDER_CREATED",
+                          "BUNDLE_ORDER_CREATED",
+                        ]);
+
+                        if (
+                          razorpayAmountEvents.has(event.event_type) &&
+                          typeof displayDetails.amount === "number"
+                        ) {
+                          displayDetails.amount = `₹${(
+                            displayDetails.amount / 100
+                          ).toLocaleString("en-IN")}`;
+                        }
+
+                        return JSON.stringify(displayDetails);
+                      })()
                     : "Event recorded"}
                 </p>
               </div>
@@ -1757,23 +1793,9 @@ async function recoverPayment() {
                   to recover this demand.
                 </p>
 
-                                <button
-                  className="merchant-action"
-                  onClick={approveNegotiationOpportunity}
-                  disabled={policyLoading}
-                >
-                  {policyLoading
-  ? "Updating Policy..."
-  : merchantPolicy?.ai_negotiation_enabled
-    ? "✓ Enabled · Update Policy"
-    : "Enable AI Negotiation"}
-                </button>
+                             
 
-                {policyStatus && (
-                  <div className="policy-status">
-                    {policyStatus}
-                  </div>
-                )}
+                
               </div>
             </div>
           ) : (

@@ -398,7 +398,7 @@ small {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
-  margin-bottom: 8px;
+  margin-bottom: 0px;
 }
 
 strong {
@@ -2321,7 +2321,7 @@ select:focus {
   }
 
   .policy-field {
-    margin-top: 12px;
+    margin-top: 0px;
   }
 
   .policy-field span {
