@@ -2,6 +2,270 @@
   box-sizing: border-box;
 }
 
+/* =========================================================
+   DESKTOP APPLICATION NAVIGATION
+   ========================================================= */
+
+.top-nav {
+  height: 64px;
+  flex: 0 0 64px;
+  display: grid;
+  grid-template-columns: 240px 1fr 120px;
+  align-items: center;
+  padding: 0 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eaf0;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.brand-name {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #172033;
+}
+
+.brand-context {
+  font-size: 11px;
+  color: #8993a3;
+}
+
+.top-nav-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.top-nav-tab {
+  width: auto;
+  margin: 0;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent !important;
+  color: #667085 !important;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.top-nav-tab:hover:not(:disabled) {
+  background: #f4f6f8 !important;
+  color: #172033 !important;
+}
+
+.top-nav-tab.active {
+  background: #edf5fb !important;
+  color: #1769aa !important;
+}
+
+.top-nav-tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.top-nav-status {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #4d7b68;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2a9d6f;
+}
+
+.audit-workspace {
+  flex: 1;
+  min-height: 0;
+  padding: 28px;
+  overflow: hidden;
+}
+
+.workspace-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.workspace-heading h2 {
+  margin: 5px 0 4px;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.workspace-heading p {
+  margin: 0;
+  color: #667085;
+  font-size: 13px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #1769aa;
+}
+
+.transaction-id {
+  padding: 9px 12px;
+  border: 1px solid #e2e7ed;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #667085;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+}
+
+.audit-layout {
+  height: calc(100% - 86px);
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.audit-summary-card,
+.audit-events {
+  min-height: 0;
+  background: #ffffff;
+  border: 1px solid #e2e7ed;
+  border-radius: 14px;
+}
+
+.audit-summary-card {
+  padding: 20px;
+}
+
+.audit-summary-card small {
+  margin-top: 18px;
+}
+
+.audit-summary-card small:first-child {
+  margin-top: 0;
+}
+
+.audit-summary-card strong {
+  margin-bottom: 2px;
+  font-size: 15px;
+  word-break: break-word;
+}
+
+.audit-events {
+  overflow: auto;
+  padding: 8px;
+}
+
+.audit-event {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: start;
+  padding: 16px;
+  border-bottom: 1px solid #edf0f3;
+}
+
+.audit-event:last-child {
+  border-bottom: 0;
+}
+
+.audit-event-index {
+  color: #1769aa;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.audit-event strong {
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.audit-event p {
+  margin: 5px 0 0;
+  color: #7a8494;
+  font-size: 11px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.audit-event-status {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #15825b;
+}
+
+.empty-workspace {
+  height: calc(100% - 86px);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: #ffffff;
+  border: 1px dashed #d9dfe7;
+  border-radius: 14px;
+}
+
+.empty-workspace p {
+  margin: 6px 0 0;
+  color: #7a8494;
+}
+
+@media (max-width: 900px) {
+  body {
+    overflow: auto;
+  }
+
+  .app {
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
+  }
+
+  .top-nav {
+    grid-template-columns: 1fr auto;
+    padding: 0 16px;
+  }
+
+  .brand-context {
+    display: none;
+  }
+
+  .top-nav-tabs {
+    order: 3;
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding-bottom: 8px;
+  }
+
+  .top-nav {
+    height: auto;
+    padding-top: 12px;
+  }
+
+  .audit-workspace {
+    overflow: visible;
+  }
+
+  .audit-layout {
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+}
+
 body {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -735,4 +999,1762 @@ strong {
 
 .bundle-payment-final strong {
   font-size: 24px;
+}
+
+/* =========================================================
+   PRUTHVIPAYZ DESKTOP UI - PASS 1
+   Presentation-only layer. Existing business logic untouched.
+   ========================================================= */
+
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  color: #172033;
+  background: #f6f8fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: #f6f8fb;
+  color: #172033;
+  overflow: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.app {
+  width: 100%;
+  height: 100vh;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: #f6f8fb;
+  color: #172033;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app > .hero {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 18px 28px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eaf0;
+}
+
+.hero .badge {
+  margin: 0;
+  color: #1769aa;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+}
+
+.hero h1 {
+  margin: 4px 0 0;
+  font-size: 20px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: none;
+}
+
+.hero .subtitle {
+  margin: 5px 0 0;
+  max-width: none;
+  color: #687386;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* New desktop navigation container */
+.mode-switch {
+  flex: 0 0 auto;
+  height: 54px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border-bottom: 1px solid #e6eaf0;
+}
+
+.mode-button {
+  width: auto;
+  margin: 0;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #687386;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mode-button:hover {
+  background: #f3f6fa;
+  color: #172033;
+}
+
+.mode-button.active {
+  background: #eef5fb;
+  color: #1769aa;
+}
+
+/* Workspace area */
+.app > .hero ~ .workspace,
+.app > .hero ~ section,
+.app > .hero ~ div {
+  min-height: 0;
+}
+
+.panel,
+.merchant-console {
+  color: #172033;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #e4e8ee;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
+}
+
+.section-title {
+  color: #596579;
+}
+
+.section-title span {
+  color: #1769aa;
+}
+
+label,
+small {
+  color: #6b7688;
+}
+
+input,
+textarea,
+select {
+  background: #ffffff;
+  color: #172033;
+  border: 1px solid #d9dfe7;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9aa4b3;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #1769aa;
+  box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.08);
+}
+
+.error {
+  background: #fff5f5;
+  border-color: #f0caca;
+  color: #bb3d3d;
+}
+
+/* Buttons */
+.app button {
+  box-shadow: none;
+}
+
+.app button:not(.mode-button) {
+  background: #1769aa;
+  color: #ffffff;
+}
+
+.app button:not(.mode-button):hover:not(:disabled) {
+  background: #155f98;
+}
+
+/* Status colors */
+.allowed {
+  color: #15825b !important;
+}
+
+.blocked {
+  color: #c74343 !important;
+}
+
+/* Desktop density */
+.decision-grid,
+.authority-card,
+.negotiation-price-row,
+.bundle-metrics,
+.opportunity-grid {
+  gap: 10px;
+}
+
+.decision-grid > div,
+.authority-card > div,
+.negotiation-price-row > div,
+.bundle-metrics > div,
+.opportunity-grid > div {
+  background: #f8fafc;
+  border-color: #e5e9ef;
+}
+
+/* Transaction cards */
+.reason,
+.payment-summary,
+.payment-status,
+.recommendation-card,
+.negotiation-card,
+.negotiation-result,
+.insight-card,
+.merchant-stat,
+.catalogue-card,
+.merchant-opportunity {
+  background: #ffffff;
+  border-color: #e2e7ed;
+}
+
+/* Soft status surfaces */
+.payment-summary {
+  background: #f5f9fd;
+  border-color: #d9e8f4;
+}
+
+.bundle-opportunity {
+  background: #f8fbfe;
+  border-color: #cfe2ef;
+}
+
+.negotiation-card {
+  background: #f8fbfe;
+  border-color: #cfe2ef;
+}
+
+.negotiation-approved {
+  background: #f3fbf7;
+  border-color: #cce9da;
+}
+
+.negotiation-rejected {
+  background: #fff7f7;
+  border-color: #efd3d3;
+}
+
+/* Merchant */
+.merchant-console {
+  background: transparent;
+}
+
+.merchant-live {
+  color: #1769aa;
+}
+
+.live-dot {
+  background: #2a9d6f;
+}
+
+.catalogue-card {
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
+}
+
+.policy-card {
+  background: #ffffff;
+  border-color: #e2e7ed;
+}
+
+/* Keep desktop viewport clean */
+.app > section,
+.app > div {
+  box-sizing: border-box;
+}
+
+@media (min-width: 901px) {
+  .app > .hero {
+    display: none;
+  }
+}
+
+/* =========================================================
+   AI BUYER DESKTOP WORKSPACE
+   ========================================================= */
+
+.buyer-workspace {
+  flex: 1;
+  min-height: 0;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.78fr) minmax(520px, 1.42fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 18px;
+  overflow: hidden;
+  background: #f6f8fb;
+}
+
+.buyer-workspace > .panel:first-child {
+  min-height: 0;
+  margin: 0;
+  overflow: auto;
+}
+
+.buyer-workspace > .result-panel {
+  min-height: 0;
+  margin: 0;
+  overflow: auto;
+}
+
+.buyer-workspace > .panel:not(:first-child):not(.result-panel),
+.buyer-workspace > .merchant-panel {
+  display: none;
+}
+
+/* Compact request composer */
+.buyer-workspace > .panel:first-child {
+  padding: 22px;
+  border-radius: 14px;
+}
+
+.buyer-workspace > .panel:first-child textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+.buyer-workspace > .panel:first-child button {
+  margin-top: 16px;
+}
+
+/* Result workspace */
+.buyer-workspace .result-panel {
+  padding: 22px;
+}
+
+.buyer-workspace .result-panel > .section-title {
+  margin-bottom: 14px;
+}
+
+.buyer-workspace .decision-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.buyer-workspace .authority-card {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Make long trace compact */
+.buyer-workspace .trace-list {
+  max-height: 185px;
+  overflow: auto;
+  gap: 6px;
+}
+
+.buyer-workspace .trace-row {
+  padding: 9px 11px;
+  background: #fbfcfd;
+  border-color: #e7ebf0;
+}
+
+.buyer-workspace .trace-marker {
+  width: 26px;
+  height: 26px;
+}
+
+.buyer-workspace .trace-content strong {
+  font-size: 12px;
+}
+
+.buyer-workspace .reason {
+  margin-top: 12px;
+  padding: 13px;
+}
+
+/* Compact negotiation */
+.buyer-workspace .negotiation-card,
+.buyer-workspace .negotiation-result,
+.buyer-workspace .recommendation-card,
+.buyer-workspace .payment-area,
+.buyer-workspace .checks {
+  margin-top: 14px;
+}
+
+.buyer-workspace .negotiation-card {
+  padding: 16px;
+}
+
+.buyer-workspace .recommendation-card {
+  padding: 16px;
+}
+
+.buyer-workspace .payment-area {
+  padding-top: 14px;
+}
+
+/* Prevent excessive page growth */
+.buyer-workspace .section-title {
+  margin-bottom: 12px;
+}
+
+.buyer-workspace p {
+  font-size: 13px;
+}
+
+@media (max-width: 1050px) {
+  .buyer-workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: auto;
+  }
+
+  .buyer-workspace > .panel:first-child {
+    max-height: 260px;
+  }
+}
+
+@media (max-width: 700px) {
+  .buyer-workspace {
+    padding: 16px;
+  }
+
+  .buyer-workspace .decision-grid,
+  .buyer-workspace .authority-card {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* =========================================================
+   AI BUYER — DESKTOP APPLICATION LAYOUT
+   ========================================================= */
+
+@media (min-width: 1100px) {
+  .buyer-workspace {
+    grid-template-columns: 280px minmax(0, 1fr) 260px;
+    gap: 16px;
+    padding: 18px 24px 20px;
+  }
+
+  .buyer-workspace > .panel:first-child {
+    grid-column: 1;
+    grid-row: 1;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .buyer-workspace > .result-panel {
+    grid-column: 2 / 4;
+    grid-row: 1;
+    height: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 240px;
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: 16px;
+    padding: 18px;
+  }
+
+  /* Result header */
+  .buyer-workspace > .result-panel > .section-title:first-child {
+    grid-column: 1 / -1;
+    margin-bottom: 6px;
+  }
+
+  /* Agent trace becomes the right rail */
+  .buyer-workspace > .result-panel > .trace-list {
+    grid-column: 2;
+    grid-row: 2 / span 8;
+    max-height: none;
+    height: 100%;
+    overflow: auto;
+    padding-left: 8px;
+    border-left: 1px solid #e9edf2;
+  }
+
+  /* Everything else stays in the main commerce column */
+  .buyer-workspace > .result-panel > .section-title,
+  .buyer-workspace > .result-panel > .decision-grid,
+  .buyer-workspace > .result-panel > .authority-card,
+  .buyer-workspace > .result-panel > .reason,
+  .buyer-workspace > .result-panel > .negotiation-card,
+  .buyer-workspace > .result-panel > .negotiation-result,
+  .buyer-workspace > .result-panel > .recommendation-card,
+  .buyer-workspace > .result-panel > .checks,
+  .buyer-workspace > .result-panel > .payment-area {
+    grid-column: 1;
+  }
+
+  .buyer-workspace > .result-panel > .decision-grid {
+    grid-row: 2;
+  }
+
+  .buyer-workspace > .result-panel > .authority-card {
+    grid-row: 3;
+    margin: 8px 0;
+  }
+
+  .buyer-workspace > .result-panel > .reason {
+    grid-row: 4;
+  }
+
+  .buyer-workspace > .result-panel > .negotiation-card,
+  .buyer-workspace > .result-panel > .negotiation-result {
+    grid-row: 5;
+  }
+
+  .buyer-workspace > .result-panel > .recommendation-card {
+    grid-row: 6;
+  }
+
+  .buyer-workspace > .result-panel > .checks {
+    grid-row: 7;
+  }
+
+  .buyer-workspace > .result-panel > .payment-area {
+    grid-row: 8;
+  }
+
+  .buyer-workspace .decision-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .buyer-workspace .authority-card {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .buyer-workspace .section-title {
+    margin-bottom: 8px;
+  }
+
+  .buyer-workspace .trace-row {
+    padding: 8px 9px;
+  }
+
+  .buyer-workspace .trace-marker {
+    width: 24px;
+    height: 24px;
+  }
+
+  .buyer-workspace .trace-content strong {
+    font-size: 11px;
+  }
+
+  .buyer-workspace .trace-content small {
+    font-size: 9px;
+  }
+
+  .buyer-workspace .reason,
+  .buyer-workspace .negotiation-card,
+  .buyer-workspace .recommendation-card,
+  .buyer-workspace .payment-area {
+    margin-top: 8px;
+  }
+
+  .buyer-workspace .negotiation-card {
+    padding: 13px;
+  }
+
+  .buyer-workspace .recommendation-card {
+    padding: 13px;
+  }
+
+  .buyer-workspace .payment-area {
+    padding-top: 10px;
+  }
+}
+
+/* =========================================================
+   PRUTHVIPAYZ — AI BUYER DESKTOP WORKSPACE V2
+   UI ONLY — NO BUSINESS LOGIC CHANGED
+   ========================================================= */
+
+@media (min-width: 1100px) {
+
+  /* Full viewport below navigation */
+  .buyer-workspace {
+    flex: 1;
+    min-height: 0;
+    height: calc(100vh - 118px);
+    padding: 18px 24px 20px;
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 16px;
+    overflow: hidden;
+  }
+
+  /* -------------------------------------------------------
+     LEFT: AI REQUEST COMPOSER
+     ------------------------------------------------------- */
+
+  .buyer-workspace > .panel:first-child {
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 22px;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+    border: 1px solid #e4e8ee;
+    border-radius: 16px;
+  }
+
+  .buyer-workspace > .panel:first-child .section-title {
+    flex: 0 0 auto;
+  }
+
+  .buyer-workspace > .panel:first-child textarea {
+    height: 150px;
+    min-height: 150px;
+    resize: none;
+  }
+
+  .buyer-workspace > .panel:first-child input {
+    height: 46px;
+  }
+
+  .buyer-workspace > .panel:first-child button {
+    height: 46px;
+    margin-top: 14px;
+  }
+
+  .buyer-workspace > .panel:first-child .error {
+    margin-top: 12px;
+  }
+
+  /* -------------------------------------------------------
+     RIGHT: AI COMMERCE WORKSPACE
+     ------------------------------------------------------- */
+
+  .buyer-workspace > .result-panel {
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 18px;
+
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 245px;
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: 16px;
+
+    background: #ffffff;
+    border: 1px solid #e4e8ee;
+    border-radius: 16px;
+  }
+
+  /* Header spans entire workspace */
+  .buyer-workspace > .result-panel > .section-title:first-child {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin-bottom: 10px;
+  }
+
+  /* -------------------------------------------------------
+     AGENT ACTIVITY — RIGHT RAIL
+     ------------------------------------------------------- */
+
+  .buyer-workspace > .result-panel > .trace-list {
+    grid-column: 2;
+    grid-row: 2;
+
+    min-height: 0;
+    height: 100%;
+    max-height: none;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 4px 0 4px 12px;
+    border-left: 1px solid #edf0f3;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .buyer-workspace .trace-row {
+    padding: 9px 10px;
+    border: 1px solid #e8ecf1;
+    border-radius: 10px;
+    background: #fbfcfd;
+  }
+
+  .buyer-workspace .trace-marker {
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    background: #eef5fb;
+    color: #1769aa;
+    font-size: 10px;
+  }
+
+  .buyer-workspace .trace-content {
+    min-width: 0;
+  }
+
+  .buyer-workspace .trace-content strong {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .buyer-workspace .trace-content small {
+    font-size: 8px;
+  }
+
+  .buyer-workspace .trace-status {
+    font-size: 8px;
+    color: #15825b;
+  }
+
+  /* -------------------------------------------------------
+     MAIN COMMERCE COLUMN
+     ------------------------------------------------------- */
+
+  .buyer-workspace > .result-panel > .decision-grid,
+  .buyer-workspace > .result-panel > .authority-card,
+  .buyer-workspace > .result-panel > .reason,
+  .buyer-workspace > .result-panel > .negotiation-card,
+  .buyer-workspace > .result-panel > .negotiation-result,
+  .buyer-workspace > .result-panel > .recommendation-card,
+  .buyer-workspace > .result-panel > .checks,
+  .buyer-workspace > .result-panel > .payment-area {
+    grid-column: 1;
+  }
+
+  .buyer-workspace > .result-panel > .decision-grid {
+    grid-row: 2;
+    align-self: start;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    gap: 8px;
+  }
+
+  .buyer-workspace .decision-grid > div {
+    padding: 11px;
+    border-radius: 10px;
+  }
+
+  .buyer-workspace .decision-grid strong {
+    font-size: 14px;
+  }
+
+  .buyer-workspace > .result-panel > .authority-card {
+    grid-row: 3;
+    margin: 8px 0 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .buyer-workspace .authority-card > div {
+    padding: 11px;
+    border-radius: 10px;
+  }
+
+  .buyer-workspace .authority-card strong {
+    font-size: 16px;
+  }
+
+  .buyer-workspace > .result-panel > .reason {
+    grid-row: 4;
+    margin: 8px 0 0;
+    padding: 11px 13px;
+  }
+
+  .buyer-workspace .reason p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  /* -------------------------------------------------------
+     NEGOTIATION
+     ------------------------------------------------------- */
+
+  .buyer-workspace .negotiation-card,
+  .buyer-workspace .negotiation-result {
+    margin-top: 8px;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  .buyer-workspace .negotiation-card {
+    grid-row: 5;
+  }
+
+  .buyer-workspace .negotiation-result {
+    grid-row: 5;
+  }
+
+  .buyer-workspace .negotiation-price-row {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .buyer-workspace .negotiation-price-row > div {
+    padding: 9px;
+    border-radius: 9px;
+  }
+
+  .buyer-workspace .negotiation-price-row strong {
+    font-size: 14px;
+  }
+
+  .buyer-workspace .negotiation-card > p {
+    margin: 6px 0 10px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .buyer-workspace .negotiation-card label {
+    margin: 8px 0 5px;
+    font-size: 11px;
+  }
+
+  .buyer-workspace .negotiation-card input {
+    height: 38px;
+    margin: 4px 0 8px;
+  }
+
+  .buyer-workspace .negotiation-button {
+    padding: 10px;
+  }
+
+  /* -------------------------------------------------------
+     BUNDLE / RECOMMENDATIONS
+     ------------------------------------------------------- */
+
+  .buyer-workspace .recommendation-card {
+    grid-row: 6;
+    margin-top: 8px;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  .buyer-workspace .bundle-header {
+    margin-bottom: 10px;
+  }
+
+  .buyer-workspace .bundle-header h3 {
+    font-size: 17px;
+    margin-top: 4px;
+  }
+
+  .buyer-workspace .bundle-metrics {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .buyer-workspace .bundle-metrics > div {
+    padding: 9px;
+    border-radius: 9px;
+  }
+
+  .buyer-workspace .bundle-metrics strong {
+    font-size: 14px;
+  }
+
+  .buyer-workspace .bundle-reason {
+    font-size: 11px;
+    line-height: 1.4;
+    margin: 7px 0;
+  }
+
+  .buyer-workspace .recommendation-button {
+    margin-top: 8px;
+    padding: 10px;
+  }
+
+  /* -------------------------------------------------------
+     POLICY
+     ------------------------------------------------------- */
+
+  .buyer-workspace > .result-panel > .checks {
+    grid-row: 7;
+    margin-top: 8px;
+  }
+
+  .buyer-workspace .checks .section-title {
+    margin-bottom: 4px;
+  }
+
+  .buyer-workspace .check-row {
+    padding: 6px 0;
+    font-size: 11px;
+  }
+
+  /* -------------------------------------------------------
+     PAYMENT
+     ------------------------------------------------------- */
+
+  .buyer-workspace > .result-panel > .payment-area {
+    grid-row: 8;
+    margin-top: 8px;
+    padding-top: 10px;
+  }
+
+  .buyer-workspace .payment-summary {
+    margin-bottom: 8px;
+    padding: 10px 12px;
+  }
+
+  .buyer-workspace .payment-summary strong {
+    font-size: 22px;
+  }
+
+  .buyer-workspace .pay-button {
+    margin-top: 8px;
+    padding: 11px;
+  }
+
+  .buyer-workspace .payment-status {
+    margin-top: 8px;
+    padding: 9px;
+    font-size: 11px;
+  }
+
+  /* -------------------------------------------------------
+     SMALLER DESKTOPS
+     ------------------------------------------------------- */
+
+  @media (max-height: 800px) {
+    .buyer-workspace {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    .buyer-workspace > .panel:first-child {
+      padding: 16px;
+    }
+
+    .buyer-workspace > .result-panel {
+      padding: 14px;
+    }
+
+    .buyer-workspace > .result-panel > .trace-list {
+      gap: 4px;
+    }
+
+    .buyer-workspace .trace-row {
+      padding: 7px 8px;
+    }
+
+    .buyer-workspace .decision-grid > div,
+    .buyer-workspace .authority-card > div {
+      padding: 8px;
+    }
+  }
+}
+
+/* =========================================================
+   FINAL AI BUYER DESKTOP FIX
+   Keep execution header visible.
+   Scroll only the commerce workspace.
+   ========================================================= */
+
+@media (min-width: 1100px) {
+
+  .buyer-workspace {
+    flex: 1;
+    min-height: 0;
+    height: calc(100vh - 118px);
+    display: grid !important;
+    grid-template-columns: 300px minmax(0, 1fr) !important;
+    gap: 16px;
+    padding: 18px 24px 20px;
+    overflow: hidden;
+  }
+
+  /* LEFT REQUEST PANEL */
+  .buyer-workspace > .panel:first-child {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    width: auto;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  /* RIGHT RESULT PANEL */
+  .buyer-workspace > .result-panel {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+
+    width: auto;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding: 18px;
+  }
+
+  /* Undo the previous grid positioning */
+  .buyer-workspace > .result-panel > * {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  /* LIVE AGENT EXECUTION HEADER */
+  .buyer-workspace > .result-panel > .section-title:first-child {
+    flex: 0 0 auto;
+    margin: 0 0 10px 0;
+  }
+
+  /* EXECUTION TRACE MUST ALWAYS BE VISIBLE */
+  .buyer-workspace > .result-panel > .trace-list {
+    order: 1;
+
+    flex: 0 0 145px;
+    height: 145px;
+    min-height: 145px;
+
+    max-height: 145px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 4px 4px 4px 0;
+
+    border-left: 0;
+    border-bottom: 1px solid #edf0f3;
+  }
+
+  /* Everything after the trace naturally flows */
+  .buyer-workspace > .result-panel > .section-title:not(:first-child),
+  .buyer-workspace > .result-panel > .decision-grid,
+  .buyer-workspace > .result-panel > .authority-card,
+  .buyer-workspace > .result-panel > .reason,
+  .buyer-workspace > .result-panel > .negotiation-card,
+  .buyer-workspace > .result-panel > .negotiation-result,
+  .buyer-workspace > .result-panel > .recommendation-card,
+  .buyer-workspace > .result-panel > .checks,
+  .buyer-workspace > .result-panel > .payment-area {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  /* Compact purchase decision */
+  .buyer-workspace .decision-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    margin: 0;
+  }
+
+  .buyer-workspace .authority-card {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    margin: 8px 0 0;
+  }
+
+  /* Keep cards compact */
+  .buyer-workspace .reason,
+  .buyer-workspace .negotiation-card,
+  .buyer-workspace .negotiation-result,
+  .buyer-workspace .recommendation-card,
+  .buyer-workspace .checks,
+  .buyer-workspace .payment-area {
+    margin-top: 8px;
+  }
+
+  /* Trace rows */
+  .buyer-workspace .trace-row {
+    padding: 7px 9px;
+  }
+
+  .buyer-workspace .trace-marker {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Don't force tiny text */
+  .buyer-workspace .trace-content strong {
+    font-size: 11px;
+  }
+
+  /* Keep the right workspace scrollbar subtle */
+  .buyer-workspace > .result-panel::-webkit-scrollbar,
+  .buyer-workspace > .result-panel > .trace-list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .buyer-workspace > .result-panel::-webkit-scrollbar-thumb,
+  .buyer-workspace > .result-panel > .trace-list::-webkit-scrollbar-thumb {
+    background: #d6dce4;
+    border-radius: 10px;
+  }
+}
+
+/* =========================================================
+   MERCHANT WORKSPACE — DESKTOP CONTROL PLANE
+   UI ONLY — EXISTING FUNCTIONALITY UNCHANGED
+   ========================================================= */
+
+@media (min-width: 1000px) {
+
+  .merchant-console {
+    flex: 1;
+    min-height: 0;
+    height: calc(100vh - 118px);
+    padding: 18px 24px 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+    grid-template-rows: auto auto minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 14px;
+    overflow: hidden;
+    background: #f6f8fb;
+  }
+
+  /* Header */
+  .merchant-console > .merchant-header {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 0;
+    padding: 2px 4px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .merchant-header .section-title {
+    margin-bottom: 5px;
+  }
+
+  .merchant-header h2 {
+    margin: 0;
+    color: #172033;
+    font-size: 25px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .merchant-header p {
+    margin: 5px 0 0;
+    color: #707b8d;
+    font-size: 12px;
+  }
+
+  .merchant-live {
+    flex: 0 0 auto;
+    padding: 8px 11px;
+    border: 1px solid #d9e7df;
+    border-radius: 999px;
+    background: #f4faf7;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+
+  /* KPI row */
+  .merchant-console > .merchant-stats {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    min-height: 0;
+    margin: 0;
+
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .merchant-stat {
+    min-height: 0;
+    padding: 14px 16px;
+    border: 1px solid #e1e6ec;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
+  }
+
+  .merchant-stat small {
+    margin-bottom: 6px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+
+  .merchant-stat strong {
+    font-size: 22px;
+    color: #172033;
+  }
+
+  /* Common dashboard panels */
+  .merchant-console > .merchant-section,
+  .merchant-console > .policy-card {
+    min-height: 0;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid #e1e6ec;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
+    overflow: hidden;
+  }
+
+  /* Catalogue */
+  .merchant-console > .merchant-section:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .merchant-console > .merchant-section:nth-of-type(1) > .section-title {
+    margin-bottom: 10px;
+  }
+
+  .catalogue-grid {
+    height: calc(100% - 32px);
+    min-height: 0;
+
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+
+    overflow: hidden;
+  }
+
+  .catalogue-card {
+    min-width: 0;
+    min-height: 0;
+    padding: 12px;
+    border: 1px solid #e5e9ee;
+    border-radius: 11px;
+    background: #fafbfd;
+  }
+
+  .catalogue-product-top {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .catalogue-category,
+  .stock-badge {
+    font-size: 9px;
+  }
+
+  .catalogue-card h3 {
+    margin: 12px 0 5px;
+    font-size: 14px;
+    line-height: 1.25;
+    color: #172033;
+  }
+
+  .catalogue-card > strong {
+    font-size: 15px;
+    color: #172033;
+  }
+
+  .catalogue-controls {
+    margin-top: 12px;
+    padding-top: 9px;
+    border-top: 1px solid #e8edf2;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 7px 8px;
+    font-size: 9px;
+  }
+
+  .catalogue-controls b {
+    font-size: 9px;
+  }
+
+  /* Policy */
+  .merchant-console > .policy-card {
+    grid-column: 2;
+    grid-row: 3;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .policy-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .policy-card-header strong {
+    margin-top: 4px;
+    font-size: 18px;
+  }
+
+  .policy-card p {
+    margin: 10px 0 0;
+    color: #707b8d;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .policy-edit-button {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 7px 10px !important;
+    border: 1px solid #d8e0e8 !important;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+    color: #1769aa !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+  }
+
+  .policy-edit-button:hover {
+    background: #f4f8fb !important;
+  }
+
+  .policy-field {
+    margin-top: 12px;
+  }
+
+  .policy-field span {
+    display: block;
+    margin-bottom: 5px;
+    color: #687386;
+    font-size: 10px;
+  }
+
+  .policy-field input,
+  .policy-field select {
+    height: 38px;
+    padding: 8px 10px;
+  }
+
+  .policy-edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .policy-edit-actions button {
+    margin-top: 0 !important;
+  }
+
+  .policy-cancel-button {
+    width: auto !important;
+    padding: 10px 14px !important;
+    background: #f3f5f7 !important;
+    color: #596579 !important;
+  }
+
+  .policy-status {
+    margin-top: 9px;
+    padding: 9px 10px;
+    border: 1px solid #dce9e2;
+    border-radius: 8px;
+    background: #f5faf7;
+    color: #4b735f;
+    font-size: 10px;
+  }
+
+  /* Revenue opportunity */
+  .merchant-console > .merchant-section:nth-of-type(2) {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .merchant-console > .merchant-section:nth-of-type(2) > .section-title {
+    margin-bottom: 10px;
+  }
+
+  .merchant-opportunity {
+    min-height: 0;
+    height: calc(100% - 32px);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto 1fr;
+    column-gap: 18px;
+
+    padding: 14px;
+    border: 1px solid #dce7ef;
+    border-radius: 11px;
+    background: #f8fbfd;
+  }
+
+  .merchant-opportunity > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .merchant-opportunity h3 {
+    margin: 5px 0;
+    font-size: 18px;
+    color: #172033;
+  }
+
+  .merchant-opportunity p {
+    margin: 0;
+    color: #6f7a8b;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .opportunity-metrics {
+    grid-column: 1;
+    align-self: end;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin-top: 10px;
+  }
+
+  .opportunity-metrics > div {
+    padding: 8px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #e6ebf0;
+  }
+
+  .opportunity-metrics small {
+    font-size: 8px;
+    margin-bottom: 4px;
+  }
+
+  .opportunity-metrics strong {
+    font-size: 13px;
+  }
+
+  .merchant-recommendation {
+    grid-column: 2;
+    grid-row: 2 / 4;
+
+    width: 220px;
+    padding-left: 14px;
+    border-left: 1px solid #e3e9ef;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .merchant-recommendation > strong {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #1769aa;
+  }
+
+  .merchant-recommendation p {
+    margin: 7px 0;
+  }
+
+  .merchant-action {
+    margin-top: 9px !important;
+    padding: 9px 11px !important;
+    font-size: 10px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Trust controls */
+  .merchant-console > .merchant-section:nth-of-type(3) {
+    grid-column: 2;
+    grid-row: 4;
+  }
+
+  .merchant-console > .merchant-section:nth-of-type(3) > .section-title {
+    margin-bottom: 10px;
+  }
+
+  .trust-banner {
+    height: calc(100% - 30px);
+    min-height: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+
+    padding: 14px;
+    border: 1px solid #e2e7ed;
+    border-radius: 11px;
+    background: #fafbfd;
+  }
+
+  .trust-banner > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .trust-banner strong {
+    font-size: 15px;
+    color: #172033;
+  }
+
+  .trust-banner span {
+    color: #687386;
+    font-size: 11px;
+  }
+
+  .trust-status {
+    flex: 0 0 auto;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #eef7f2;
+    color: #15825b;
+    font-size: 9px;
+    font-weight: 800;
+  }
+}
+
+/* Smaller desktop / tablet fallback */
+@media (min-width: 701px) and (max-width: 999px) {
+  .merchant-console {
+    padding: 16px;
+    overflow: auto;
+  }
+
+  .catalogue-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* =========================================================
+   MERCHANT WORKSPACE — FINAL DESKTOP FIX
+   UI ONLY
+   ========================================================= */
+
+@media (min-width: 1000px) {
+
+  .merchant-console {
+    height: calc(100vh - 118px) !important;
+    min-height: 0 !important;
+    padding: 18px 24px 20px !important;
+
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.72fr) !important;
+    grid-template-rows:
+      auto
+      auto
+      minmax(250px, 1fr)
+      minmax(155px, 0.72fr) !important;
+
+    gap: 14px !important;
+    overflow: hidden !important;
+  }
+
+  /* 01 — Header */
+  .merchant-console > :nth-child(1) {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+  }
+
+  /* KPI row */
+  .merchant-console > :nth-child(2) {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+  }
+
+  /* 02 — Catalogue */
+  .merchant-console > :nth-child(3) {
+    grid-column: 1 !important;
+    grid-row: 3 !important;
+  }
+
+  /* AI Commerce Policy */
+  .merchant-console > :nth-child(4) {
+    grid-column: 2 !important;
+    grid-row: 3 !important;
+  }
+
+  /* 04 — Revenue Opportunities */
+  .merchant-console > :nth-child(5) {
+    grid-column: 1 !important;
+    grid-row: 4 !important;
+  }
+
+  /* 05 — Agent Trust Controls */
+  .merchant-console > :nth-child(6) {
+    grid-column: 2 !important;
+    grid-row: 4 !important;
+  }
+
+  /* Every dashboard panel */
+  .merchant-console > .merchant-section,
+  .merchant-console > .policy-card {
+    min-height: 0 !important;
+    height: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Catalogue */
+  .merchant-console > :nth-child(3) {
+    padding: 14px !important;
+  }
+
+  .merchant-console > :nth-child(3) .catalogue-grid {
+    height: calc(100% - 28px) !important;
+    min-height: 0 !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+
+    overflow: hidden !important;
+  }
+
+  .merchant-console > :nth-child(3) .catalogue-card {
+    min-width: 0 !important;
+    padding: 10px !important;
+    overflow: hidden !important;
+  }
+
+  .merchant-console > :nth-child(3) .catalogue-card h3 {
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+    margin: 10px 0 5px !important;
+  }
+
+  .merchant-console > :nth-child(3) .catalogue-controls {
+    margin-top: 8px !important;
+  }
+
+  /* Policy */
+  .merchant-console > :nth-child(4) {
+    padding: 16px !important;
+  }
+
+  .merchant-console > :nth-child(4) p {
+    margin-top: 8px !important;
+  }
+
+  /* Revenue Opportunity */
+  .merchant-console > :nth-child(5) {
+    padding: 14px !important;
+  }
+
+  .merchant-console > :nth-child(5) .merchant-opportunity {
+    height: calc(100% - 30px) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .merchant-console > :nth-child(5) .merchant-recommendation {
+    min-width: 190px;
+  }
+
+  /* Trust */
+  .merchant-console > :nth-child(6) {
+    padding: 14px !important;
+  }
+
+  .merchant-console > :nth-child(6) .trust-banner {
+    height: calc(100% - 30px) !important;
+    min-height: 0 !important;
+  }
+
+  /* Smaller text keeps the full dashboard visible */
+  .merchant-console .section-title {
+    margin-bottom: 8px !important;
+  }
+
+  .merchant-console .section-title span {
+    font-size: 10px !important;
+  }
+}
+
+/* =========================================================
+   MERCHANT — FIX BOTTOM PANELS
+   ========================================================= */
+
+@media (min-width: 1000px) {
+
+  /* Let the dashboard itself scroll only when the viewport
+     is too short for all merchant sections. */
+  .merchant-console {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Revenue Opportunities */
+  .merchant-console > :nth-child(5) {
+    min-height: 220px !important;
+    height: 100% !important;
+    overflow: auto !important;
+  }
+
+  .merchant-console > :nth-child(5) .merchant-opportunity {
+    height: auto !important;
+    min-height: 150px !important;
+    overflow: visible !important;
+  }
+
+  .merchant-console > :nth-child(5) .merchant-recommendation {
+    overflow: visible !important;
+  }
+
+  /* Agent Trust Controls */
+  .merchant-console > :nth-child(6) {
+    min-height: 220px !important;
+    height: 100% !important;
+    overflow: auto !important;
+  }
+
+  .merchant-console > :nth-child(6) .trust-banner {
+    height: auto !important;
+    min-height: 150px !important;
+    overflow: visible !important;
+  }
+
+  /* Make the action button fully visible */
+  .merchant-console > :nth-child(5) .merchant-action {
+    display: block !important;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+}
+
+/* Normal desktop viewport: give bottom panels more room */
+@media (min-width: 1200px) and (min-height: 800px) {
+  .merchant-console {
+    grid-template-rows:
+      auto
+      auto
+      minmax(250px, 1fr)
+      minmax(190px, 0.8fr) !important;
+  }
+}
+
+/* =========================================================
+   MERCHANT — REMOVE REDUNDANT TRUST PANEL
+   ========================================================= */
+
+@media (min-width: 1000px) {
+
+  /* Hide redundant Agent Trust Controls panel */
+  .merchant-console > :nth-child(6) {
+    display: none !important;
+  }
+
+  /* Let Revenue Opportunities use the full width */
+  .merchant-console > :nth-child(5) {
+    grid-column: 1 / -1 !important;
+    grid-row: 4 !important;
+  }
+
+  .merchant-console > :nth-child(5) .merchant-opportunity {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+
+  .merchant-console > :nth-child(5) .merchant-recommendation {
+    width: auto;
+    min-width: 260px;
+  }
 }

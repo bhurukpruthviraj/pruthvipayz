@@ -701,23 +701,119 @@ async function recoverPayment() {
           evaluate, authorize, and purchase safely.
         </p>
         </section>
-        <div className="mode-switch">
-          <button
-            className={view === "buyer" ? "mode-button active" : "mode-button"}
-            onClick={() => setView("buyer")}
-          >
-            AI Buyer
-          </button>
-          <button
-            className={view === "merchant" ? "mode-button active" : "mode-button"}
-            onClick={() => { setView("merchant"); loadMerchantInsights(); }}
-          >
-            Merchant
-          </button>
+        <nav className="top-nav">
+  <div className="brand-mark">
+    <span className="brand-name">PRUTHVIPAYZ</span>
+    <span className="brand-context">Agentic Commerce</span>
+  </div>
+
+  <div className="top-nav-tabs">
+    <button
+      className={view === "buyer" ? "top-nav-tab active" : "top-nav-tab"}
+      onClick={() => setView("buyer")}
+    >
+      AI Buyer
+    </button>
+
+    <button
+      className={
+        view === "merchant"
+          ? "top-nav-tab active"
+          : "top-nav-tab"
+      }
+      onClick={() => {
+        setView("merchant");
+        loadMerchantInsights();
+      }}
+    >
+      Merchant
+    </button>
+
+    <button
+      className={
+        view === "audit"
+          ? "top-nav-tab active"
+          : "top-nav-tab"
+      }
+      onClick={() => setView("audit")}
+      disabled={!result}
+      title={!result ? "Run a transaction first" : "View audit trail"}
+    >
+      Audit Trail
+    </button>
+  </div>
+
+  <div className="top-nav-status">
+    <span className="status-dot"></span>
+    LIVE
+  </div>
+</nav>
+
+        {view === "audit" ? (
+  <section className="audit-workspace">
+    <div className="workspace-heading">
+      <div>
+        <div className="eyebrow">TRANSACTION OBSERVABILITY</div>
+        <h2>Audit Trail</h2>
+        <p>Every AI decision and money action in one place.</p>
+      </div>
+
+      {result?.transaction_id && (
+        <div className="transaction-id">
+          {result.transaction_id}
+        </div>
+      )}
+    </div>
+
+    {!result ? (
+      <div className="empty-workspace">
+        <strong>No transaction yet</strong>
+        <p>Run an AI buyer transaction to inspect its audit trail.</p>
+      </div>
+    ) : (
+      <div className="audit-layout">
+        <div className="audit-summary-card">
+          <small>TRANSACTION</small>
+          <strong>{result.transaction_id}</strong>
+
+          <small>PRODUCT</small>
+          <strong>{result.product?.selected_product_name}</strong>
+
+          <small>AUTHORIZED AMOUNT</small>
+          <strong>
+            ₹
+            {result.authorization?.approved_amount?.toLocaleString(
+              "en-IN"
+            )}
+          </strong>
         </div>
 
-        {view === "buyer" ? (
-          <>
+        <div className="audit-events">
+          {result.audit?.map((event, index) => (
+            <div className="audit-event" key={`${event.event_type}-${index}`}>
+              <span className="audit-event-index">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+
+              <div>
+                <strong>{event.event_type.replaceAll("_", " ")}</strong>
+                <p>
+                  {event.details
+                    ? JSON.stringify(event.details)
+                    : "Event recorded"}
+                </p>
+              </div>
+
+              <span className="audit-event-status">RECORDED</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </section>
+) : view === "buyer" ? (
+  <>
+    <div className="buyer-workspace">
 
 
         <section className="panel">
@@ -894,10 +990,7 @@ async function recoverPayment() {
                   </strong>
                 </div>
 
-                <div>
-                  <small>MAX AI DISCOUNT</small>
-                  <strong>₹299</strong>
-                </div>
+                
               </div>
 
               <label>Your offer (₹)</label>
@@ -954,19 +1047,21 @@ async function recoverPayment() {
               ) : (
                 <>
                   <div className="negotiation-result-label">
-                    ✕ OFFER REJECTED
+                    NEGOTIATION CLOSED
                   </div>
 
-                  <h3>Merchant policy blocked the offer</h3>
+                  <h3>That price isn't available</h3>
 
-                  <p>{negotiationResult.reason}</p>
+                  <p>
+                    I couldn't secure that offer for this purchase.
+                    The negotiation has now been closed.
+                  </p>
 
-                  <small>
-                    Maximum AI discount: ₹
-                    {negotiationResult.merchant_max_discount?.toLocaleString(
-                      "en-IN"
-                    ) ?? "299"}
-                  </small>
+                  <div className="negotiation-checks">
+                    <span>✓ Offer evaluated</span>
+                    <span>✓ Purchase rules enforced</span>
+                    <span>✓ No further negotiation attempts allowed</span>
+                  </div>
                 </>
               )}
             </div>
@@ -1386,9 +1481,10 @@ async function recoverPayment() {
         </section>
       )}
 
-      </>
-    ) : (
-      <section className="merchant-console">
+      </div>
+  </>
+) : (
+  <section className="merchant-console">
 
         <div className="merchant-header">
           <div>

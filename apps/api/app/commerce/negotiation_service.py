@@ -31,9 +31,17 @@ class NegotiationService:
         previous_events = self.audit.get_events(transaction_id)
 
         if any(
-            event.event_type == "NEGOTIATION_APPROVED"
+            event.event_type in {
+                "NEGOTIATION_APPROVED",
+                "NEGOTIATION_REJECTED",
+            }
             for event in previous_events
         ):
+            return {
+                "status": "rejected",
+                "transaction_id": transaction_id,
+                "reason": "Negotiation has already been closed for this purchase.",
+            }
             return {
                 "status": "rejected",
                 "transaction_id": transaction_id,
@@ -106,7 +114,7 @@ class NegotiationService:
                     "original_price": original_price,
                     "buyer_offer": buyer_offer,
                     "discount": discount,
-                    "merchant_max_discount": max_discount,
+                    
                     "final_price": updated.amount,
                 },
             )
@@ -119,7 +127,7 @@ class NegotiationService:
                 "original_price": original_price,
                 "buyer_offer": buyer_offer,
                 "discount": discount,
-                "merchant_max_discount": max_discount,
+                
                 "final_price": updated.amount,
                 "buyer_max_amount": transaction.buyer_max_amount,
                 "reason": (
@@ -148,8 +156,8 @@ class NegotiationService:
             "original_price": original_price,
             "buyer_offer": buyer_offer,
             "discount": discount,
-            "merchant_max_discount": max_discount,
+            
             "reason": (
-                "Offer exceeds the merchant's maximum AI discount."
+                "That price isn't available for this purchase."
             ),
         }
