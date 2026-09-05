@@ -28,39 +28,128 @@ It ensures that:
 
 ## How It Works
 
-AI Buyer
-   ↓
-Product Discovery
-   ↓
-AI Product Decision
-   ↓
-Policy & Catalogue Validation
-   ↓
-Negotiation / Bundle Recommendation
-   ↓
-Authorization
-   ↓
-Razorpay Payment
-   ↓
-Transaction + Audit Trail
+PRUTHVIPAYZ — RUN INSTRUCTIONS
+===============================
 
-HOW TO RUN IT:
+PREREQUISITES
+-------------
+- Python 3.10+ (Python 3.12 recommended)
+- Node.js + npm
+- Git
+- Razorpay Test Mode credentials
+- Gemini API key
 
-1. git clone <https://github.com/bhurukpruthviraj/pruthvipayz.git>
 
-activate backend:
-1.cd apps/api
-2.python3 -m venv .venv
-3.source .venv/bin/activate
-4.uvicorn apps.api.app.main:app --reload --port 8000
+1. CLONE THE REPOSITORY
+-----------------------
+git clone https://github.com/bhurukpruthviraj/pruthvipayz.git
+cd pruthvipayz
 
-in another terminal start frontend:
+
+2. BACKEND SETUP
+----------------
+
+Linux / macOS / GitHub Codespaces:
+
+python3 -m venv apps/api/.venv
+source apps/api/.venv/bin/activate
+pip install -r apps/api/requirements.txt
+
+Create:
+apps/api/.env
+
+Add:
+
+RAZORPAY_KEY_ID=your_razorpay_test_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_test_key_secret
+GEMINI_API_KEY=your_gemini_api_key
+
+Start the backend:
+
+uvicorn apps.api.app.main:app --reload --port 8000
+
+Keep this terminal running.
+
+
+Windows PowerShell:
+
+python -m venv apps\api\.venv
+apps\api\.venv\Scripts\python.exe -m pip install -r apps\api\requirements.txt
+
+If PowerShell blocks Activate.ps1, do NOT change the execution policy.
+Run the backend directly:
+
+apps\api\.venv\Scripts\python.exe -m uvicorn apps.api.app.main:app --port 8000
+
+Create apps/api/.env with the same three variables above.
+
+
+3. FRONTEND SETUP
+-----------------
+Open a SECOND terminal.
 
 cd apps/web
 npm install
 npm run dev -- --host 0.0.0.0
 
-create .env and add :
-RAZORPAY_KEY_ID=your_razorpay_test_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_test_key_secret
-GEMINI_API_KEY=your_gemini_api_key
+Open the URL shown by Vite (normally port 5173).
+
+
+4. DEMO FLOW
+------------
+1. Open AI Buyer.
+2. Enter a natural-language product request.
+3. Enter the buyer's maximum budget.
+4. Evaluate the purchase.
+5. Review AI product selection and policy checks.
+6. Try an over-budget request to demonstrate negotiation.
+7. Show merchant-defined negotiation limits.
+8. Show bundle/add-on recommendations.
+9. Create a Razorpay Test Mode order.
+10. Complete a Test Mode payment.
+11. Open Audit Trail and show the complete decision/payment history.
+
+For payment-failure testing, use Razorpay Test Mode.
+The application limits recovery to one controlled retry.
+
+
+5. PRODUCTION BUILD CHECK
+-------------------------
+cd apps/web
+npm install
+npm run build
+
+A successful build creates:
+apps/web/dist/
+
+
+6. IMPORTANT SECURITY NOTES
+---------------------------
+- Never commit apps/api/.env.
+- Never commit real Razorpay secrets or Gemini API keys.
+- .env.example is safe to commit.
+- Use Razorpay Test Mode for the demo.
+
+
+7. PROJECT ARCHITECTURE
+-----------------------
+AI Buyer
+   |
+   v
+FastAPI Backend
+   |
+   +--> AI Product Decision
+   |
+   +--> Policy + Catalogue Validation
+   |
+   +--> Negotiation
+   |
+   +--> Bundle Recommendation
+   |
+   v
+Razorpay Test Mode
+   |
+   v
+Transactions + Audit Trail
+
+
